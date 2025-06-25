@@ -16,7 +16,7 @@ mkdir -p 'outputs/dtu/'$OUTNAME'/'$FUSIONMETHOD'_quantitative/'
 
 set_array=(1 4 9 10 11 12 13 15 23 24 29 32 33 34 48 49 62 75 77 110 114 118)
 
-num_at_once=2   # 1 2 4 5 7 11 22
+num_at_once=22   # 1 2 4 5 7 11 22
 times=`expr $((${#set_array[*]} / $num_at_once))`
 remain=`expr $((${#set_array[*]} - $num_at_once * $times))`
 this_group_num=0
@@ -32,7 +32,7 @@ do
     
     for set in "${set_array[@]:pos:this_group_num}"
     do
-        matlab -nodesktop -nosplash -r "cd datasets/evaluations/dtu_parallel; dataPath='$DTU_QUANTITATIVE_ROOT'; plyPath='$PLYPATH'; resultsPath='$RESULTPATH'; method_string='$METHOD'; thisset='$set'; BaseEvalMain_web" &
+        bash scripts/dtu/run_baseeval.sh "$DTU_QUANTITATIVE_ROOT" "$PLYPATH" "$RESULTPATH" "$METHOD" "$set" &
     done
     wait
 
@@ -44,4 +44,4 @@ wait
 
 SET=[1,4,9,10,11,12,13,15,23,24,29,32,33,34,48,49,62,75,77,110,114,118]
 
-matlab -nodesktop -nosplash -r "cd datasets/evaluations/dtu_parallel; resultsPath='$RESULTPATH'; method_string='$METHOD'; set='$SET'; ComputeStat_web" > $LOGPATH
+bash scripts/dtu/run_computestat.sh "$RESULTPATH" "$METHOD" "$SET" > $LOGPATH
